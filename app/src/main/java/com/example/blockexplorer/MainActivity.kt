@@ -10,7 +10,13 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private val adapter by lazy {
-        BlockAdapter()
+        BlockAdapter{ item ->
+            println(item.height)
+            val intent = Intent(this, BlockDetailActivity::class.java)
+            intent.putExtra("block_id", item.id)
+            this.startActivity(intent)
+
+        }
     }
     private val retrofit by lazy {
         ApiHelper.retrofit.create(BlockServiceApi::class.java)
@@ -27,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun init() {
         lifecycleScope.launch {
-          val response =  retrofit.listBlock(678163)
+            val response =  retrofit.listBlock(678163)
             if (response.isSuccessful){
                 val items = response.body()?: emptyList()
                 adapter.items.addAll(items)
