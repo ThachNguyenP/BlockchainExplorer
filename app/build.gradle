@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -54,7 +55,13 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.2.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.1'
 
+    def room_version = "2.2.6"
 
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:$room_version"
 
 
 }
