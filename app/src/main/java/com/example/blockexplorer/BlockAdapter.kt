@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class BlockAdapter : RecyclerView.Adapter<BlockAdapter.ViewHolderItem>() {
+class BlockAdapter(private val listener: (Block) -> Unit) : RecyclerView.Adapter<BlockAdapter.ViewHolderItem>() {
     val items = mutableListOf<Block>()
 
     inner class ViewHolderItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -28,6 +28,8 @@ class BlockAdapter : RecyclerView.Adapter<BlockAdapter.ViewHolderItem>() {
     }
 
     override fun onBindViewHolder(holder: ViewHolderItem, position: Int) {
-        holder.bind(items[position])
+        val item = items[position]
+        holder.bind(item)
+        holder.itemView.setOnClickListener { listener(item) }
     }
 }
