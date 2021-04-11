@@ -9,12 +9,12 @@ object DbHelper {
         db = Room.databaseBuilder(
             context,
             AppDatabase::class.java, "block_db"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     fun getBlockDao() = db.blockDao()
 
-    @Database(entities = [Block::class], version = 1)
+    @Database(entities = [Block::class], version = 2)
     abstract class AppDatabase : RoomDatabase() {
         abstract fun blockDao(): BlockDao
     }
