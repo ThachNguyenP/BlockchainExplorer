@@ -8,22 +8,18 @@ import kotlinx.coroutines.launch
 
 class BlockDetailActivity : AppCompatActivity() {
 
-    private val retrofit by lazy {
-        ApiHelper.retrofit.create(BlockServiceApi::class.java)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.block_item)
 
-        val blockId = intent?.extras?.getString("block_id").toString()
+        val blockId = intent.getIntExtra("block_height",0)
 
         lifecycleScope.launch {
-            val response =  retrofit.getBlock(blockId)
-            if (response.isSuccessful){
-                findViewById<TextView>(R.id.tv_height).text = response.body()?.blockHeight.toString()
-            }
+            val block =  DbHelper.getBlockDao().getBlock(blockId)
+            findViewById<TextView>(R.id.tv_height).text = block.height.toString()
+            findViewById<TextView>(R.id.tv_transaction).text = block.transaction.toString()
+            findViewById<TextView>(R.id.tv_size).text = block.size.toString()
         }
     }
 }

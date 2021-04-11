@@ -9,16 +9,16 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object ApiHelper {
 
-    val interceptor = HttpLoggingInterceptor().apply {
+    private val interceptor = HttpLoggingInterceptor().apply {
         level = HttpLoggingInterceptor.Level.BODY
     }
-    val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
+    private val client = OkHttpClient.Builder().addInterceptor(interceptor).build()
     private val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
         .build()
-    val retrofit = Retrofit.Builder()
+    val retrofit by lazy { Retrofit.Builder()
         .client(client)
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .baseUrl("https://blockstream.info/api/")
-        .build()
+        .build() }
 }

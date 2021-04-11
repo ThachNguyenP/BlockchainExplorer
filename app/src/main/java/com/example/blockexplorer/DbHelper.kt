@@ -30,4 +30,9 @@ interface BlockDao {
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBlocks(list: List<Block>)
+
+    @Transaction
+    @Query("SELECT * FROM block where height == :blockHeight")
+    suspend fun getBlock(blockHeight: Int): Block
+
 }

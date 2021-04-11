@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         BlockAdapter { item ->
             println(item.height)
             val intent = Intent(this, BlockDetailActivity::class.java)
-            intent.putExtra("block_id", item.id)
+            intent.putExtra("block_height", item.height)
             this.startActivity(intent)
 
         }
