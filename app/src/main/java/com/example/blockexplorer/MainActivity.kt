@@ -8,13 +8,13 @@ import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import kotlinx.coroutines.launch
 import retrofit2.Response
 
 class MainActivity : AppCompatActivity() {
     private val adapter by lazy {
         BlockAdapter { item ->
-            println(item.height)
             val intent = Intent(this, BlockDetailActivity::class.java)
             intent.putExtra("block_height", item.height)
             this.startActivity(intent)
@@ -26,10 +26,20 @@ class MainActivity : AppCompatActivity() {
     }
     private lateinit var recyclerView: RecyclerView
     private lateinit var prLoading: ProgressBar
+
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         DbHelper.init(application)
+        swipeRefreshLayout = findViewById(R.id.swipeToRefresh)
+        swipeRefreshLayout.setOnRefreshListener{
+            adapter.items.clear()
+            adapter.notifyDataSetChanged()
+            loadListBlock("")
+            swipeRefreshLayout.isRefreshing = false
+        }
         val linearLayout = LinearLayoutManager(this)
         recyclerView = findViewById(R.id.recycler_view)
         prLoading = findViewById(R.id.progress_loading)
@@ -38,13 +48,16 @@ class MainActivity : AppCompatActivity() {
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
-                val position = linearLayout.findLastCompletelyVisibleItemPosition()
-                if (position == adapter.itemCount - 1) {
-                    val lastItem = adapter.items[position]
+
+                val visibleItemCount = recyclerView.childCount
+                val totalItemCount = linearLayout.itemCount
+                val firstVisibleItem = linearLayout.findFirstCompletelyVisibleItemPosition()
+
+                if (totalItemCount - visibleItemCount <= firstVisibleItem){
+                    val lastItem = adapter.items[linearLayout.findLastCompletelyVisibleItemPosition()]
                     val blockNumberRequest = lastItem.height - 1
                     loadListBlock(blockNumberRequest.toString())
                 }
-
             }
         })
         loadListBlock("")
