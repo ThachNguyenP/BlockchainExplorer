@@ -9,12 +9,12 @@ object DbHelper {
         db = Room.databaseBuilder(
             context,
             AppDatabase::class.java, "block_db"
-        ).build()
+        ).fallbackToDestructiveMigration().build()
     }
 
     fun getBlockDao() = db.blockDao()
 
-    @Database(entities = [Block::class], version = 1)
+    @Database(entities = [Block::class], version = 2)
     abstract class AppDatabase : RoomDatabase() {
         abstract fun blockDao(): BlockDao
     }
@@ -30,4 +30,9 @@ interface BlockDao {
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertBlocks(list: List<Block>)
+
+    @Transaction
+    @Query("SELECT * FROM block where height == :blockHeight")
+    suspend fun getBlock(blockHeight: Int): Block
+
 }

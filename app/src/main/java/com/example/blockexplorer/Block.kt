@@ -18,5 +18,26 @@ data class Block(
     val transaction: Int,
     @ColumnInfo(name = "size")
     @Json(name = "size")
-    val size: Float
+    val size: Float,
+    @ColumnInfo(name = "timestamp")
+    @Json(name = "timestamp")
+    val timestamp: Int,
+    @ColumnInfo(name = "weight")
+    @Json(name = "weight")
+    val weight: Int,
+    @ColumnInfo(name = "version")
+    @Json(name = "version")
+    val version: Int,
+    @ColumnInfo(name = "merkle_root")
+    @Json(name = "merkle_root")
+    val merkleRoot: String,
+    @ColumnInfo(name = "bits")
+    @Json(name = "bits")
+    val bits: String,
+    @ColumnInfo(name = "difficulty")
+    @Json(name = "difficulty")
+    val difficulty: String,
+    @ColumnInfo(name = "nonce")
+    @Json(name = "nonce")
+    val nonce: String
 )
