@@ -6,6 +6,8 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.text.SimpleDateFormat
+import java.util.*
 
 object ApiHelper {
 
@@ -21,4 +23,12 @@ object ApiHelper {
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .baseUrl("https://blockstream.info/api/")
         .build() }
+
+    fun getDate(timestamp: Int) :String {
+        val calendar = Calendar.getInstance(Locale.US)
+        calendar.timeInMillis = timestamp * 1000L
+        val simpleFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.US)
+        return simpleFormat.format(calendar.time)
+    }
+
 }

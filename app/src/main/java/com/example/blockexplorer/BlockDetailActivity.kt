@@ -18,7 +18,7 @@ class BlockDetailActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val block =  DbHelper.getBlockDao().getBlock(blockId)
             findViewById<TextView>(R.id.tv_height).text = block.height.toString()
-            findViewById<TextView>(R.id.tv_timestamp).text = block.transaction.toString()
+            findViewById<TextView>(R.id.tv_timestamp).text = ApiHelper.getDate(block.timestamp)
             findViewById<TextView>(R.id.tv_transaction).text = block.transaction.toString()
             findViewById<TextView>(R.id.tv_size).text = block.size.toString()
             findViewById<TextView>(R.id.tv_weight).text = block.height.toString()
