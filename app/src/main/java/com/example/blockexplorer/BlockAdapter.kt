@@ -12,7 +12,7 @@ class BlockAdapter(private val listener: (Block) -> Unit) : RecyclerView.Adapter
     inner class ViewHolderItem(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(block: Block) {
             itemView.findViewById<TextView>(R.id.tv_height).text = block.height.toString()
-            itemView.findViewById<TextView>(R.id.tv_timestamp).text = block.timestamp.toString()
+            itemView.findViewById<TextView>(R.id.tv_timestamp).text = ApiHelper.getDate(block.timestamp)
             itemView.findViewById<TextView>(R.id.tv_transaction).text = block.transaction.toString()
             itemView.findViewById<TextView>(R.id.tv_size).text = block.size.toString()
             itemView.findViewById<TextView>(R.id.tv_weight).text = block.weight.toString()

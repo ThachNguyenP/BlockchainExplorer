@@ -33,33 +33,35 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         DbHelper.init(application)
-        swipeRefreshLayout = findViewById(R.id.swipeToRefresh)
-        swipeRefreshLayout.setOnRefreshListener{
-            adapter.items.clear()
-            adapter.notifyDataSetChanged()
-            loadListBlock("")
-            swipeRefreshLayout.isRefreshing = false
-        }
         val linearLayout = LinearLayoutManager(this)
         recyclerView = findViewById(R.id.recycler_view)
         prLoading = findViewById(R.id.progress_loading)
+        swipeRefreshLayout = findViewById(R.id.swipeToRefresh)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = linearLayout
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                val visibleItemCount = recyclerView.childCount
-                val totalItemCount = linearLayout.itemCount
-                val firstVisibleItem = linearLayout.findFirstCompletelyVisibleItemPosition()
+                val position = linearLayout.findLastCompletelyVisibleItemPosition()
+                if (position == adapter.itemCount - 1) {
+                    val lastItem = adapter.items[position]
 
-                if (totalItemCount - visibleItemCount <= firstVisibleItem){
-                    val lastItem = adapter.items[linearLayout.findLastCompletelyVisibleItemPosition()]
+//                val visibleItemCount = recyclerView.childCount
+//                val totalItemCount = linearLayout.itemCount
+//                val firstVisibleItem = linearLayout.findFirstCompletelyVisibleItemPosition()
+//
+//                if (totalItemCount - visibleItemCount <= firstVisibleItem){
+//                    val lastItem = adapter.items[linearLayout.findLastCompletelyVisibleItemPosition()]
                     val blockNumberRequest = lastItem.height - 1
                     loadListBlock(blockNumberRequest.toString())
                 }
             }
         })
+        swipeRefreshLayout.setOnRefreshListener {
+            adapter.items.clear()
+            loadListBlock("")
+        }
         loadListBlock("")
     }
 
@@ -78,6 +80,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             prLoading.isVisible = false
+            swipeRefreshLayout.isRefreshing = false
         }
     }
 
