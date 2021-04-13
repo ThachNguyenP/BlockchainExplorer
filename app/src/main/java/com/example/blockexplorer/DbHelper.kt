@@ -24,7 +24,7 @@ object DbHelper {
 @Dao
 interface BlockDao {
     @Transaction
-    @Query("SELECT * FROM block where height <= :blockHeight limit 10")
+    @Query("SELECT * FROM block where height <= :blockHeight ORDER BY height DESC limit 10")
     suspend fun getBlocks(blockHeight: Int): List<Block>
 
     @Transaction
